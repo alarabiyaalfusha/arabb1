@@ -46,7 +46,7 @@ button{font:inherit;cursor:pointer;border:0;background:none}
 .tool .row button.on{background:var(--g);color:#fff}
 /* content */
 .card{position:absolute;left:240px;top:268px;width:1290px;height:640px;border-radius:48px;background:linear-gradient(#ffffff,#FFF9EB);border:6px solid var(--gold);box-shadow:0 10px 0 rgba(20,47,99,.28),0 0 0 14px rgba(36,86,166,.9)}
-.numb{position:absolute;left:-60px;top:-50px;width:112px;height:112px;border-radius:50%;background:var(--gl);color:var(--g);border:6px solid var(--g);font-weight:700;font-size:44px;display:flex;align-items:center;justify-content:center}
+.numb{position:absolute;left:-60px;top:-50px;width:112px;height:112px;border-radius:50%;background:var(--gl);color:var(--g);border:6px solid var(--g);font-weight:700;font-size:34px;display:flex;align-items:center;justify-content:center}
 .spk{width:96px;height:96px;border-radius:50%;background:linear-gradient(var(--g),var(--gd));border:5px solid var(--gold);display:flex;align-items:center;justify-content:center;box-shadow:0 5px 0 rgba(20,47,99,.35);flex:none}
 .spk svg{width:54px;height:54px}
 .spk.play{background:var(--gl);animation:pulse .8s infinite}
@@ -225,8 +225,8 @@ function render(keep){
       autoList=[[it.n+'a',it.aar.replace(/^أ:\s*/,''),'sa'],[it.n+'b',it.bar.replace(/^ب:\s*/,''),'sb']];
       window._al=autoList;
     }else{
-      let rows='';T.items.forEach((it,j)=>{rows+=`<a href="#t${S.t}/${slides(S.t).findIndex(x=>x.k==='s'&&x.j===j)}" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--gold);border-radius:18px;padding:2px 12px"><b style="color:var(--g);width:46px;font-size:20px">${it.n}</b><span class="ar" style="font-size:26px;font-weight:700;flex:1;color:var(--gd);white-space:nowrap;overflow:hidden">${it.v[0].ar}</span></a>`});
-      h+=`<div class="card fade" style="overflow:auto;padding:26px 30px"><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">${rows}</div></div>
+      let rows='';T.items.forEach((it,j)=>{rows+=`<a href="#t${S.t}/${slides(S.t).findIndex(x=>x.k==='s'&&x.j===j)}" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--gold);border-radius:18px;padding:2px 12px"><b style="color:var(--g);width:46px;font-size:20px">${it.n}</b><span class="ar" style="font-size:26px;font-weight:700;flex:1;min-width:0;color:var(--gd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.v[0].ar}</span></a>`});
+      h+=`<div class="card fade" style="overflow:auto;padding:26px 30px"><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">${rows}</div></div>
       ${QUIZ[S.t]?`<a class="go" style="position:absolute;left:1560px;top:300px;width:320px;text-align:center;font-size:30px;padding:18px 10px;line-height:1.3;text-decoration:none" href="${QUIZ[S.t]}">Kuis topik ${S.t}<br>الاختبار ←</a>`:''}`;
     }
     const pv=S.i>0?`go('t${S.t}/${S.i-1}')`:"go('lessons')";
