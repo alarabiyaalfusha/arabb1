@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latihan Perjalanan dan Wisata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@500;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one centered card on a deep green field, gold accents, answer buttons stacked on phones. */
+:root{
+  --green:#142F63; --green-2:#2456A6; --gold:#F4D98B; --cream:#FFF9EB; --ink:#24344C;
+  --ok:#2e9e4f; --no:#d63a3a;
+  --ar:'Noto Naskh Arabic','Amiri','Traditional Arabic',serif;
+  --ui:'Nunito',system-ui,sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--green);color:var(--cream);font-family:var(--ui)}
+body{display:flex;justify-content:center;padding:20px 16px 40px}
+main{width:100%;max-width:760px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+h1{font-size:1.05rem;margin:0;font-weight:800;letter-spacing:.02em;color:var(--gold)}
+.score{font-weight:800;font-variant-numeric:tabular-nums}
+.bar{height:10px;border-radius:99px;background:var(--green-2);overflow:hidden;margin-bottom:18px}
+.bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .35s}
+.card{background:var(--cream);color:var(--ink);border-radius:22px;padding:22px 18px;border:4px solid var(--gold)}
+.kind{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--green-2);margin:0 0 10px}
+.q{display:flex;align-items:center;gap:14px;justify-content:center;margin:6px 0 4px}
+.ar{font-family:var(--ar);font-weight:700;direction:rtl;line-height:1.5}
+.q .ar{font-size:clamp(2.1rem,8vw,3.4rem);text-align:center}
+.hint{text-align:center;font-weight:800;font-size:1.1rem;margin:0 0 18px;color:var(--green-2)}
+.snd{flex:none;width:56px;height:56px;border-radius:50%;border:0;background:var(--green);color:var(--gold);font-size:1.5rem;cursor:pointer}
+.snd:focus-visible,.opt:focus-visible,.next:focus-visible{outline:4px solid var(--gold);outline-offset:3px}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{position:relative;border:4px solid var(--green);background:var(--gold);color:var(--ink);border-radius:18px;padding:14px 10px;cursor:pointer;min-height:84px;display:flex;align-items:center;justify-content:center}
+.opt .ar{font-size:1.9rem;text-align:center}
+.opt.lat{font-weight:800;font-size:1.15rem;text-align:center}
+.opt:hover:not(:disabled){transform:translateY(-2px)}
+.opt:disabled{cursor:default}
+.badge{position:absolute;top:-16px;inset-inline-end:-10px;width:44px;height:44px;border-radius:50%;border:3px solid #fff;color:#fff;font-size:1.4rem;font-weight:800;display:none;align-items:center;justify-content:center}
+.opt.ok .badge{display:flex;background:var(--ok)}
+.opt.no .badge{display:flex;background:var(--no)}
+.opt.reveal{border-color:var(--ok)}
+.fb{text-align:center;font-weight:800}
+.next{display:none;margin:14px auto 0;border:0;border-radius:99px;background:var(--green);color:var(--gold);font:800 1.05rem var(--ui);padding:12px 28px;cursor:pointer}
+.end{text-align:center}
+.end h2{margin:6px 0;font-size:1.6rem}
+.end .big{font-size:3rem;font-weight:800;font-variant-numeric:tabular-nums}
+.pic{width:190px;max-width:60%;margin:0 auto 6px;background:#fff;border:3px solid var(--gold);border-radius:18px;padding:6px}
+.pic svg{width:100%;height:auto;display:block}
+.chk{display:flex;gap:8px;justify-content:center;align-items:center;font-weight:800;margin:10px 0 4px}
+.fb{min-height:1.6em;margin:16px 0 0}
+.expl{margin-top:8px;font-weight:600;background:#fff;border-radius:14px;padding:10px 12px;border:2px solid var(--gold)}
+.expl .ar{font-size:1.6rem}
+.mini{border:0;border-radius:50%;width:34px;height:34px;background:var(--green);color:var(--gold);cursor:pointer;margin-inline-start:6px}
+.rev{list-style:none;padding:0;margin:0 0 6px;text-align:start;display:grid;gap:6px}
+.rev .ar{font-size:1.4rem}
+.emo{font-size:4.2rem;text-align:center;line-height:1.1;margin:0 0 6px}
+.bank,.ans{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;direction:rtl;min-height:62px;padding:10px;border-radius:16px}
+.ans{background:#fff;border:3px dashed var(--green);margin-bottom:12px}
+.tok{font-family:var(--ar);font-weight:700;font-size:1.6rem;border:3px solid var(--green);background:var(--gold);color:var(--ink);border-radius:14px;padding:6px 14px;cursor:pointer}
+.tok:disabled{opacity:.35}
+.mt{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mt button{border:3px solid var(--green);background:var(--gold);color:var(--ink);border-radius:14px;padding:12px 8px;min-height:64px;cursor:pointer;font:800 1rem var(--ui)}
+.mt button.ar{font:700 1.5rem var(--ar)}
+.mt .sel{outline:4px solid var(--green)}
+.mt .done{background:var(--ok);color:#fff;border-color:var(--ok);cursor:default}
+.mt .bad{background:#f4b8b8;border-color:var(--no)}
+.note{font-size:.85rem;opacity:.8;text-align:center;margin-top:16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.back{color:var(--gold);font-weight:800;text-decoration:none;font-size:.9rem;border:2px solid var(--gold);border-radius:99px;padding:4px 12px}
+</style>
+</head>
+<body>
+<main>
+  <header><a href="index.html#quizzes" class="back">← Menu · القائمة</a><h1>تدريب · Latihan</h1><div class="score" id="score">0 / 0</div></header>
+  <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+  <section class="card" id="card" aria-live="polite"></section>
+  <p class="note">Tombol 🔊 membaca kalimat memakai suara perangkat; jika tidak ada suara Arab, tombol tidak berbunyi.</p>
+</main>
+<script>
+var T={mean:"Pilih arti · اختر المعنى",tr:"Pilih bentuk Arab · اختر العبارة",dl:"Jawab dialog · رد الحوار",fill:"Lengkapi kalimat · أكمل",listen:"Dengarkan · استمع",order:"Susun kalimat · رتب الكلمات",match:"Pasangkan · طابق",sit:"Situasi · الموقف"};
+function mc(n,kind,o){o.n=n;o.kind=kind;o.type='mc';return o}
+var DATA=[{"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "حَجَزْنَا الرِّحْلَةَ قَبْلَ شَهْرَيْنِ بِسِعْرٍ مُخَفَّضٍ.", "hint": "Apa artinya?", "opts": ["Kami memesan penerbangan dua bulan sebelumnya dengan harga diskon.", "Kami memeriksa bagasi sebelum berangkat.", "Kami menyewa mobil untuk berpindah antar kota."], "arOpts": false, "full": "حَجَزْنَا الرِّحْلَةَ قَبْلَ شَهْرَيْنِ بِسِعْرٍ مُخَفَّضٍ.", "id": "Kami memesan penerbangan dua bulan sebelumnya dengan harga diskon.", "n": 1}, {"type": "mc", "kind": "Dengarkan · استمع", "ar": "", "listen": "أُلْغِيَتْ رِحْلَتُنَا بِسَبَبِ الْعَاصِفَةِ.", "emo": "🎧", "hint": "Tekan 🔊 lalu pilih yang kamu dengar.", "opts": ["أُلْغِيَتْ رِحْلَتُنَا بِسَبَبِ الْعَاصِفَةِ.", "وَصَلْنَا مُتَأَخِّرِينَ فَفَاتَتْنَا الرِّحْلَةُ.", "لِلْأَسَفِ، لَمْ يَكُنْ لَدَيْنَا وَقْتٌ كَافٍ."], "arOpts": true, "full": "أُلْغِيَتْ رِحْلَتُنَا بِسَبَبِ الْعَاصِفَةِ.", "id": "Penerbangan kami dibatalkan karena badai.", "n": 2}, {"type": "mc", "kind": "Pilih bentuk Arab · اختر العبارة", "ar": "", "hint": "Di mana saya bisa mengurus pengembalian harga tiket?", "opts": ["أَيْنَ أَسْتَطِيعُ اسْتِرْجَاعَ ثَمَنِ التَّذْكِرَةِ؟", "احْتَجْنَا إِلَى خَرِيطَةٍ لِأَنَّنَا ضِعْنَا.", "يُمْكِنُكُمْ تَغْيِيرُ الْحَجْزِ مُقَابِلَ رُسُومٍ إِضَافِيَّةٍ."], "arOpts": true, "full": "أَيْنَ أَسْتَطِيعُ اسْتِرْجَاعَ ثَمَنِ التَّذْكِرَةِ؟", "id": "Di mana saya bisa mengurus pengembalian harga tiket?", "n": 3}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "وَصَلْنَا مُتَأَخِّرِينَ فَفَاتَتْنَا الرِّحْلَةُ.", "hint": "Apa artinya?", "opts": ["Kami tiba terlambat sehingga ketinggalan penerbangan.", "Sayangnya, kami tidak punya cukup waktu.", "Anda bisa mengubah pemesanan dengan biaya tambahan."], "arOpts": false, "full": "وَصَلْنَا مُتَأَخِّرِينَ فَفَاتَتْنَا الرِّحْلَةُ.", "id": "Kami tiba terlambat sehingga ketinggalan penerbangan.", "n": 4}, {"type": "order", "kind": "Susun kalimat · رتب الكلمات", "hint": "Anda bisa mengubah pemesanan dengan biaya tambahan.", "words": ["يُمْكِنُكُمْ", "تَغْيِيرُ", "الْحَجْزِ", "مُقَابِلَ", "رُسُومٍ", "إِضَافِيَّةٍ."], "full": "يُمْكِنُكُمْ تَغْيِيرُ الْحَجْزِ مُقَابِلَ رُسُومٍ إِضَافِيَّةٍ.", "id": "Anda bisa mengubah pemesanan dengan biaya tambahan.", "n": 5}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "زُرْنَا الْمَعَالِمَ الْأَثَرِيَّةَ فِي الْمَدِينَةِ الْقَدِيمَةِ.", "hint": "Apa artinya?", "opts": ["Kami mengunjungi situs bersejarah di kota tua.", "Kami memesan penerbangan dua bulan sebelumnya dengan harga diskon.", "Kami butuh peta karena tersesat."], "arOpts": false, "full": "زُرْنَا الْمَعَالِمَ الْأَثَرِيَّةَ فِي الْمَدِينَةِ الْقَدِيمَةِ.", "id": "Kami mengunjungi situs bersejarah di kota tua.", "n": 6}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "اسْتَأْجَرْنَا سَيَّارَةً لِلتَّنَقُّلِ بَيْنَ الْمُدُنِ.", "hint": "Apa artinya?", "opts": ["Kami menyewa mobil untuk berpindah antar kota.", "Suatu hari kami akan kembali ke sini.", "Pemandu wisata berbicara bahasa Arab dan Inggris."], "arOpts": false, "full": "اسْتَأْجَرْنَا سَيَّارَةً لِلتَّنَقُّلِ بَيْنَ الْمُدُنِ.", "id": "Kami menyewa mobil untuk berpindah antar kota.", "n": 7}, {"type": "mc", "kind": "Pilih bentuk Arab · اختر العبارة", "ar": "", "hint": "Pemandu wisata berbicara bahasa Arab dan Inggris.", "opts": ["كَانَ الْمُرْشِدُ السِّيَاحِيُّ يَتَحَدَّثُ بِالْعَرَبِيَّةِ وَالْإِنْجْلِيزِيَّةِ.", "أَوْصَيْتُ أَصْدِقَائِي بِزِيَارَةِ هَذَا الْمَكَانِ.", "تَذَوَّقْنَا أَطْعِمَةً مَحَلِّيَّةً لَمْ نَعْرِفْهَا مِنْ قَبْلُ."], "arOpts": true, "full": "كَانَ الْمُرْشِدُ السِّيَاحِيُّ يَتَحَدَّثُ بِالْعَرَبِيَّةِ وَالْإِنْجْلِيزِيَّةِ.", "id": "Pemandu wisata berbicara bahasa Arab dan Inggris.", "n": 8}, {"type": "mc", "kind": "Dengarkan · استمع", "ar": "", "listen": "تَذَوَّقْنَا أَطْعِمَةً مَحَلِّيَّةً لَمْ نَعْرِفْهَا مِنْ قَبْلُ.", "emo": "🎧", "hint": "Tekan 🔊 lalu pilih yang kamu dengar.", "opts": ["تَذَوَّقْنَا أَطْعِمَةً مَحَلِّيَّةً لَمْ نَعْرِفْهَا مِنْ قَبْلُ.", "لَا تَنْسَ أَنْ تُحَدِّثَ بَيَانَاتِ الْحَجْزِ.", "أَيْنَ أَسْتَطِيعُ اسْتِرْجَاعَ ثَمَنِ التَّذْكِرَةِ؟"], "arOpts": true, "full": "تَذَوَّقْنَا أَطْعِمَةً مَحَلِّيَّةً لَمْ نَعْرِفْهَا مِنْ قَبْلُ.", "id": "Kami mencicipi makanan lokal yang belum pernah kami kenal.", "n": 9}, {"type": "match", "kind": "Pasangkan · طابق", "hint": "Pasangkan kalimat dengan artinya.", "pairs": [["احْتَجْنَا إِلَى خَرِيطَةٍ لِأَنَّنَا ضِعْنَا.", "Kami butuh peta karena tersesat."], ["لَا تَنْسَ أَنْ تُحَدِّثَ بَيَانَاتِ الْحَجْزِ.", "Jangan lupa memperbarui data pemesanan."], ["تَفَقَّدْنَا أَمْتِعَتَنَا قَبْلَ الْمُغَادَرَةِ.", "Kami memeriksa bagasi sebelum berangkat."], ["زُرْنَا الْمَعَالِمَ الْأَثَرِيَّةَ فِي الْمَدِينَةِ الْقَدِيمَةِ.", "Kami mengunjungi situs bersejarah di kota tua."]], "full": "احْتَجْنَا إِلَى خَرِيطَةٍ لِأَنَّنَا ضِعْنَا. — لَا تَنْسَ أَنْ تُحَدِّثَ بَيَانَاتِ الْحَجْزِ. — تَفَقَّدْنَا أَمْتِعَتَنَا قَبْلَ الْمُغَادَرَةِ. — زُرْنَا الْمَعَالِمَ الْأَثَرِيَّةَ فِي الْمَدِينَةِ الْقَدِيمَةِ.", "id": "Kami butuh peta karena tersesat. / Jangan lupa memperbarui data pemesanan. / Kami memeriksa bagasi sebelum berangkat. / Kami mengunjungi situs bersejarah di kota tua.", "n": 10}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "تَعَطَّلَتْ سَيَّارَتُنَا فِي مُنْتَصَفِ الطَّرِيقِ.", "hint": "Apa artinya?", "opts": ["Mobil kami mogok di tengah jalan.", "Sayangnya, kami tidak punya cukup waktu.", "Kami mengunjungi situs bersejarah di kota tua."], "arOpts": false, "full": "تَعَطَّلَتْ سَيَّارَتُنَا فِي مُنْتَصَفِ الطَّرِيقِ.", "id": "Mobil kami mogok di tengah jalan.", "n": 11}, {"type": "mc", "kind": "Dengarkan · استمع", "ar": "", "listen": "أُفَضِّلُ أَنْ أَسْكُنَ فِي بَيْتٍ مَحَلِّيٍّ لَا فِي فُنْدُقٍ.", "emo": "🎧", "hint": "Tekan 🔊 lalu pilih yang kamu dengar.", "opts": ["أُفَضِّلُ أَنْ أَسْكُنَ فِي بَيْتٍ مَحَلِّيٍّ لَا فِي فُنْدُقٍ.", "تَعَطَّلَتْ سَيَّارَتُنَا فِي مُنْتَصَفِ الطَّرِيقِ.", "زُرْنَا الْمَعَالِمَ الْأَثَرِيَّةَ فِي الْمَدِينَةِ الْقَدِيمَةِ."], "arOpts": true, "full": "أُفَضِّلُ أَنْ أَسْكُنَ فِي بَيْتٍ مَحَلِّيٍّ لَا فِي فُنْدُقٍ.", "id": "Saya lebih suka menginap di rumah warga daripada hotel.", "n": 12}, {"type": "mc", "kind": "Pilih bentuk Arab · اختر العبارة", "ar": "", "hint": "Kita harus menghormati adat negara yang kita kunjungi.", "opts": ["يَجِبُ احْتِرَامُ عَادَاتِ الْبَلَدِ الَّذِي نَزُورُهُ.", "كَانَتِ الرِّحْلَةُ أَطْوَلَ مِمَّا تَوَقَّعْنَا.", "كَانَ الْمُرْشِدُ السِّيَاحِيُّ يَتَحَدَّثُ بِالْعَرَبِيَّةِ وَالْإِنْجْلِيزِيَّةِ."], "arOpts": true, "full": "يَجِبُ احْتِرَامُ عَادَاتِ الْبَلَدِ الَّذِي نَزُورُهُ.", "id": "Kita harus menghormati adat negara yang kita kunjungi.", "n": 13}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "لَا تَنْسَ أَنْ تُحَدِّثَ بَيَانَاتِ الْحَجْزِ.", "hint": "Apa artinya?", "opts": ["Jangan lupa memperbarui data pemesanan.", "Saya lebih suka menginap di rumah warga daripada hotel.", "Anda bisa mengubah pemesanan dengan biaya tambahan."], "arOpts": false, "full": "لَا تَنْسَ أَنْ تُحَدِّثَ بَيَانَاتِ الْحَجْزِ.", "id": "Jangan lupa memperbarui data pemesanan.", "n": 14}, {"type": "order", "kind": "Susun kalimat · رتب الكلمات", "hint": "Kami memeriksa bagasi sebelum berangkat.", "words": ["تَفَقَّدْنَا", "أَمْتِعَتَنَا", "قَبْلَ", "الْمُغَادَرَةِ."], "full": "تَفَقَّدْنَا أَمْتِعَتَنَا قَبْلَ الْمُغَادَرَةِ.", "id": "Kami memeriksa bagasi sebelum berangkat.", "n": 15}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "كَانَتِ الرِّحْلَةُ أَطْوَلَ مِمَّا تَوَقَّعْنَا.", "hint": "Apa artinya?", "opts": ["Perjalanannya lebih panjang daripada yang kami duga.", "Kami menikmati pemandangan dari jendela kereta.", "Anda bisa mengubah pemesanan dengan biaya tambahan."], "arOpts": false, "full": "كَانَتِ الرِّحْلَةُ أَطْوَلَ مِمَّا تَوَقَّعْنَا.", "id": "Perjalanannya lebih panjang daripada yang kami duga.", "n": 16}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "اسْتَمْتَعْنَا بِالْمَنْظَرِ مِنْ نَافِذَةِ الْقِطَارِ.", "hint": "Apa artinya?", "opts": ["Kami menikmati pemandangan dari jendela kereta.", "Suatu hari kami akan kembali ke sini.", "Kami mengunjungi situs bersejarah di kota tua."], "arOpts": false, "full": "اسْتَمْتَعْنَا بِالْمَنْظَرِ مِنْ نَافِذَةِ الْقِطَارِ.", "id": "Kami menikmati pemandangan dari jendela kereta.", "n": 17}, {"type": "mc", "kind": "Pilih bentuk Arab · اختر العبارة", "ar": "", "hint": "Saya menyarankan teman-teman mengunjungi tempat ini.", "opts": ["أَوْصَيْتُ أَصْدِقَائِي بِزِيَارَةِ هَذَا الْمَكَانِ.", "تَعَطَّلَتْ سَيَّارَتُنَا فِي مُنْتَصَفِ الطَّرِيقِ.", "زُرْنَا الْمَعَالِمَ الْأَثَرِيَّةَ فِي الْمَدِينَةِ الْقَدِيمَةِ."], "arOpts": true, "full": "أَوْصَيْتُ أَصْدِقَائِي بِزِيَارَةِ هَذَا الْمَكَانِ.", "id": "Saya menyarankan teman-teman mengunjungi tempat ini.", "n": 18}, {"type": "mc", "kind": "Dengarkan · استمع", "ar": "", "listen": "لِلْأَسَفِ، لَمْ يَكُنْ لَدَيْنَا وَقْتٌ كَافٍ.", "emo": "🎧", "hint": "Tekan 🔊 lalu pilih yang kamu dengar.", "opts": ["لِلْأَسَفِ، لَمْ يَكُنْ لَدَيْنَا وَقْتٌ كَافٍ.", "كَانَتِ الرِّحْلَةُ أَطْوَلَ مِمَّا تَوَقَّعْنَا.", "يَجِبُ احْتِرَامُ عَادَاتِ الْبَلَدِ الَّذِي نَزُورُهُ."], "arOpts": true, "full": "لِلْأَسَفِ، لَمْ يَكُنْ لَدَيْنَا وَقْتٌ كَافٍ.", "id": "Sayangnya, kami tidak punya cukup waktu.", "n": 19}, {"type": "match", "kind": "Pasangkan · طابق", "hint": "Pasangkan kalimat dengan artinya.", "pairs": [["سَنَعُودُ إِلَى هُنَا يَوْمًا مَا.", "Suatu hari kami akan kembali ke sini."], ["كَانَ الْمُرْشِدُ السِّيَاحِيُّ يَتَحَدَّثُ بِالْعَرَبِيَّةِ وَالْإِنْجْلِيزِيَّةِ.", "Pemandu wisata berbicara bahasa Arab dan Inggris."], ["تَفَقَّدْنَا أَمْتِعَتَنَا قَبْلَ الْمُغَادَرَةِ.", "Kami memeriksa bagasi sebelum berangkat."], ["زُرْنَا الْمَعَالِمَ الْأَثَرِيَّةَ فِي الْمَدِينَةِ الْقَدِيمَةِ.", "Kami mengunjungi situs bersejarah di kota tua."]], "full": "سَنَعُودُ إِلَى هُنَا يَوْمًا مَا. — كَانَ الْمُرْشِدُ السِّيَاحِيُّ يَتَحَدَّثُ بِالْعَرَبِيَّةِ وَالْإِنْجْلِيزِيَّةِ. — تَفَقَّدْنَا أَمْتِعَتَنَا قَبْلَ الْمُغَادَرَةِ. — زُرْنَا الْمَعَالِمَ الْأَثَرِيَّةَ فِي الْمَدِينَةِ الْقَدِيمَةِ.", "id": "Suatu hari kami akan kembali ke sini. / Pemandu wisata berbicara bahasa Arab dan Inggris. / Kami memeriksa bagasi sebelum berangkat. / Kami mengunjungi situs bersejarah di kota tua.", "n": 20}];
+var card=document.getElementById('card'),shuffleQ=true,list,i,score,answered,wrong;
+function shuffle(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var t=a[k];a[k]=a[j];a[j]=t}return a}
+function speak(t){try{if(!window.speechSynthesis||!t)return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
+function setBar(v){document.getElementById('bar').style.width=(v/list.length*100)+'%'}
+function home(){
+  list=DATA;i=0;score=0;
+  document.getElementById('score').textContent='';document.getElementById('bar').style.width='0';
+  card.innerHTML='<div class="end"><p class="kind">Selamat datang · أهلًا بك</p><h2>Latihan: Perjalanan dan Wisata</h2><p class="hint" style="margin-bottom:6px">السفر والسياحة · 20 soal dengan beragam tipe: pilihan, dengar, susun kata, dan pasangkan.</p><label class="chk"><input type="checkbox" id="rnd" checked> Acak urutan soal</label><button class="next" id="go" style="display:block">Mulai · ابدأ</button></div>';
+  document.getElementById('go').onclick=function(){shuffleQ=document.getElementById('rnd').checked;begin(DATA)};
+}
+function begin(items){list=shuffleQ?shuffle(items):items.slice();i=0;score=0;wrong=[];show()}
+function head(q){return '<p class="kind">'+q.kind+' · '+(i+1)+'/'+list.length+'</p>'}
+function show(){
+  answered=false;var q=list[i];
+  setBar(i);document.getElementById('score').textContent=score+' / '+i;
+  if(q.type==='order')return showOrder(q);
+  if(q.type==='match')return showMatch(q);
+  var idx=shuffle(q.opts.map(function(_,k){return k}));
+  var h=head(q);
+  if(q.emo)h+='<div class="emo" aria-hidden="true">'+q.emo+'</div>';
+  if(q.ar||q.listen)h+='<div class="q"><button class="snd" id="snd" aria-label="Putar suara">🔊</button>'+(q.ar?'<span class="ar">'+q.ar+'</span>':'')+'</div>';
+  h+='<p class="hint">'+q.hint+'</p><div class="opts">';
+  idx.forEach(function(k){h+='<button class="opt'+(q.arOpts?'':' lat')+'" data-k="'+k+'"><span class="'+(q.arOpts?'ar':'')+'">'+q.opts[k]+'</span><span class="badge" aria-hidden="true"></span></button>'});
+  h+='</div><div class="fb" id="fb"></div><button class="next" id="next">Lanjut ←</button>';
+  card.innerHTML=h;
+  var sb=document.getElementById('snd');if(sb)sb.onclick=function(){speak(q.listen||q.ar)};
+  Array.prototype.forEach.call(card.querySelectorAll('.opt'),function(b){b.onclick=function(){pick(b,q)}});
+  document.getElementById('next').onclick=advance;
+}
+function advance(){i++;i<list.length?show():finish()}
+function result(q,right){
+  if(right)score++;else wrong.push(q);
+  var fb=document.getElementById('fb');
+  fb.innerHTML='<div style="color:'+(right?'#1f7a3c':'#b02a2a')+'">'+(right?'Benar! أحسنت':'Belum tepat.')+'</div><div class="expl"><span class="ar">'+q.full+'</span><br>'+q.id+' <button class="mini" id="snd2" aria-label="Putar suara">🔊</button></div>';
+  document.getElementById('snd2').onclick=function(){speak(q.full.split(' — ')[0])};
+  document.getElementById('score').textContent=score+' / '+(i+1);setBar(i+1);
+  var n=document.getElementById('next');n.style.display='block';n.textContent=(i+1<list.length)?'Lanjut ←':'Lihat hasil';n.focus();
+}
+function pick(b,q){
+  if(answered)return;answered=true;
+  var k=+b.getAttribute('data-k'),right=(k===q.ans||(q.ans===undefined&&k===0));
+  Array.prototype.forEach.call(card.querySelectorAll('.opt'),function(o){o.disabled=true;if(+o.getAttribute('data-k')===0&&!right)o.classList.add('reveal')});
+  b.classList.add(right?'ok':'no');b.querySelector('.badge').textContent=right?'✓':'✕';
+  result(q,right);
+}
+function showOrder(q){
+  var bank=shuffle(q.words.map(function(w,k){return {w:w,k:k}})),chosen=[];
+  var h=head(q)+'<div class="q"><button class="snd" id="snd" aria-label="Putar suara">🔊</button></div><p class="hint">'+q.hint+'</p><div class="ans" id="ans" aria-label="Jawabanmu"></div><div class="bank" id="bank"></div><div class="fb" id="fb"></div><button class="next" id="chk" style="display:block">Periksa · تحقق</button><button class="next" id="next">Lanjut ←</button>';
+  card.innerHTML=h;
+  document.getElementById('snd').onclick=function(){speak(q.full)};
+  function draw(){
+    var a=document.getElementById('ans'),b=document.getElementById('bank');a.innerHTML='';b.innerHTML='';
+    chosen.forEach(function(t,p){var e=document.createElement('button');e.className='tok';e.textContent=t.w;e.onclick=function(){if(answered)return;chosen.splice(p,1);bank.push(t);draw()};a.appendChild(e)});
+    bank.forEach(function(t,p){var e=document.createElement('button');e.className='tok';e.textContent=t.w;e.disabled=answered;e.onclick=function(){bank.splice(p,1);chosen.push(t);draw()};b.appendChild(e)});
+  }
+  draw();
+  document.getElementById('next').onclick=advance;
+  document.getElementById('chk').onclick=function(){
+    if(answered||chosen.length!==q.words.length)return;answered=true;
+    var right=chosen.every(function(t,p){return t.k===p});
+    document.getElementById('ans').style.borderColor=right?'#2e9e4f':'#d63a3a';
+    document.getElementById('chk').style.display='none';draw();result(q,right);
+  };
+}
+function showMatch(q){
+  var L=shuffle(q.pairs.map(function(p,k){return {t:p[0],k:k}})),R=shuffle(q.pairs.map(function(p,k){return {t:p[1],k:k}})),sel=null,left=q.pairs.length,mist=0;
+  var h=head(q)+'<p class="hint">'+q.hint+'</p><div class="mt"><div style="display:grid;gap:10px" id="cl"></div><div style="display:grid;gap:10px" id="cr"></div></div><div class="fb" id="fb"></div><button class="next" id="next">Lanjut ←</button>';
+  card.innerHTML=h;
+  document.getElementById('next').onclick=advance;
+  function mk(col,arr,isAr){arr.forEach(function(x){var b=document.createElement('button');b.textContent=x.t;if(isAr)b.className='ar';b.onclick=function(){
+      if(b.classList.contains('done'))return;
+      if(isAr){speak(x.t);Array.prototype.forEach.call(document.querySelectorAll('#cl button'),function(e){e.classList.remove('sel')});b.classList.add('sel');sel={k:x.k,b:b};return}
+      if(!sel)return;
+      if(sel.k===x.k){sel.b.classList.remove('sel');sel.b.classList.add('done');b.classList.add('done');sel=null;left--;
+        if(!left){answered=true;result(q,mist===0)}}
+      else{mist++;b.classList.add('bad');setTimeout(function(){b.classList.remove('bad')},500)}
+    };col.appendChild(b)})}
+  mk(document.getElementById('cl'),L,true);mk(document.getElementById('cr'),R,false);
+}
+function finish(){
+  var pct=Math.round(score/list.length*100);
+  var h='<div class="end"><p class="kind">Hasil · النتيجة</p><div class="big">'+score+' / '+list.length+'</div><h2>'+(pct>=80?'Mumtaz! ممتاز':pct>=50?'Bagus, terus berlatih':'Ayo coba lagi')+'</h2>';
+  if(wrong.length){h+='<p class="hint" style="margin:10px 0 6px">Perlu diulang:</p><ul class="rev">';wrong.forEach(function(q){h+='<li><span class="ar">'+q.full+'</span> — '+q.id+'</li>'});h+='</ul><button class="next" id="redo" style="display:block">Ulangi yang salah · أعد الأخطاء</button>'}
+  h+='<button class="next" id="again" style="display:block">Mulai dari awal · من البداية</button></div>';
+  card.innerHTML=h;var r=document.getElementById('redo');if(r)r.onclick=function(){begin(wrong.slice())};
+  document.getElementById('again').onclick=home;document.getElementById('bar').style.width='100%';
+}
+var AUDIO={"حَجَزْنَا الرِّحْلَةَ قَبْلَ شَهْرَيْنِ بِسِعْرٍ مُخَفَّضٍ.": "1621", "": "1621a", "أُلْغِيَتْ رِحْلَتُنَا بِسَبَبِ الْعَاصِفَةِ.": "1622", "أَيْنَ أَسْتَطِيعُ اسْتِرْجَاعَ ثَمَنِ التَّذْكِرَةِ؟": "1623", "وَصَلْنَا مُتَأَخِّرِينَ فَفَاتَتْنَا الرِّحْلَةُ.": "1624", "يُمْكِنُكُمْ تَغْيِيرُ الْحَجْزِ مُقَابِلَ رُسُومٍ إِضَافِيَّةٍ.": "1625", "زُرْنَا الْمَعَالِمَ الْأَثَرِيَّةَ فِي الْمَدِينَةِ الْقَدِيمَةِ.": "1626", "اسْتَأْجَرْنَا سَيَّارَةً لِلتَّنَقُّلِ بَيْنَ الْمُدُنِ.": "1627", "كَانَ الْمُرْشِدُ السِّيَاحِيُّ يَتَحَدَّثُ بِالْعَرَبِيَّةِ وَالْإِنْجْلِيزِيَّةِ.": "1628", "تَذَوَّقْنَا أَطْعِمَةً مَحَلِّيَّةً لَمْ نَعْرِفْهَا مِنْ قَبْلُ.": "1629", "احْتَجْنَا إِلَى خَرِيطَةٍ لِأَنَّنَا ضِعْنَا.": "1630", "تَعَطَّلَتْ سَيَّارَتُنَا فِي مُنْتَصَفِ الطَّرِيقِ.": "1631", "أُفَضِّلُ أَنْ أَسْكُنَ فِي بَيْتٍ مَحَلِّيٍّ لَا فِي فُنْدُقٍ.": "1632", "يَجِبُ احْتِرَامُ عَادَاتِ الْبَلَدِ الَّذِي نَزُورُهُ.": "1633", "لَا تَنْسَ أَنْ تُحَدِّثَ بَيَانَاتِ الْحَجْزِ.": "1634", "تَفَقَّدْنَا أَمْتِعَتَنَا قَبْلَ الْمُغَادَرَةِ.": "1635", "كَانَتِ الرِّحْلَةُ أَطْوَلَ مِمَّا تَوَقَّعْنَا.": "1636", "اسْتَمْتَعْنَا بِالْمَنْظَرِ مِنْ نَافِذَةِ الْقِطَارِ.": "1637", "أَوْصَيْتُ أَصْدِقَائِي بِزِيَارَةِ هَذَا الْمَكَانِ.": "1638", "لِلْأَسَفِ، لَمْ يَكُنْ لَدَيْنَا وَقْتٌ كَافٍ.": "1639", "سَنَعُودُ إِلَى هُنَا يَوْمًا مَا.": "1640"},curA=null;
+function speak(t){try{if(curA){curA.pause();curA=null}if(window.speechSynthesis)speechSynthesis.cancel();if(!t)return;
+ function tts(){try{if(!window.speechSynthesis)return;var u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
+ var k=AUDIO[t];if(!k){tts();return}
+ var a=new Audio('audio/'+k+'.mp3');curA=a;a.playbackRate=.95;a.onerror=tts;var p=a.play();if(p&&p.catch)p.catch(tts)}catch(e){}}
+home();
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latihan Makanan dan Budaya Kuliner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@500;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one centered card on a deep green field, gold accents, answer buttons stacked on phones. */
+:root{
+  --green:#142F63; --green-2:#2456A6; --gold:#F4D98B; --cream:#FFF9EB; --ink:#24344C;
+  --ok:#2e9e4f; --no:#d63a3a;
+  --ar:'Noto Naskh Arabic','Amiri','Traditional Arabic',serif;
+  --ui:'Nunito',system-ui,sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--green);color:var(--cream);font-family:var(--ui)}
+body{display:flex;justify-content:center;padding:20px 16px 40px}
+main{width:100%;max-width:760px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+h1{font-size:1.05rem;margin:0;font-weight:800;letter-spacing:.02em;color:var(--gold)}
+.score{font-weight:800;font-variant-numeric:tabular-nums}
+.bar{height:10px;border-radius:99px;background:var(--green-2);overflow:hidden;margin-bottom:18px}
+.bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .35s}
+.card{background:var(--cream);color:var(--ink);border-radius:22px;padding:22px 18px;border:4px solid var(--gold)}
+.kind{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--green-2);margin:0 0 10px}
+.q{display:flex;align-items:center;gap:14px;justify-content:center;margin:6px 0 4px}
+.ar{font-family:var(--ar);font-weight:700;direction:rtl;line-height:1.5}
+.q .ar{font-size:clamp(2.1rem,8vw,3.4rem);text-align:center}
+.hint{text-align:center;font-weight:800;font-size:1.1rem;margin:0 0 18px;color:var(--green-2)}
+.snd{flex:none;width:56px;height:56px;border-radius:50%;border:0;background:var(--green);color:var(--gold);font-size:1.5rem;cursor:pointer}
+.snd:focus-visible,.opt:focus-visible,.next:focus-visible{outline:4px solid var(--gold);outline-offset:3px}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{position:relative;border:4px solid var(--green);background:var(--gold);color:var(--ink);border-radius:18px;padding:14px 10px;cursor:pointer;min-height:84px;display:flex;align-items:center;justify-content:center}
+.opt .ar{font-size:1.9rem;text-align:center}
+.opt.lat{font-weight:800;font-size:1.15rem;text-align:center}
+.opt:hover:not(:disabled){transform:translateY(-2px)}
+.opt:disabled{cursor:default}
+.badge{position:absolute;top:-16px;inset-inline-end:-10px;width:44px;height:44px;border-radius:50%;border:3px solid #fff;color:#fff;font-size:1.4rem;font-weight:800;display:none;align-items:center;justify-content:center}
+.opt.ok .badge{display:flex;background:var(--ok)}
+.opt.no .badge{display:flex;background:var(--no)}
+.opt.reveal{border-color:var(--ok)}
+.fb{text-align:center;font-weight:800}
+.next{display:none;margin:14px auto 0;border:0;border-radius:99px;background:var(--green);color:var(--gold);font:800 1.05rem var(--ui);padding:12px 28px;cursor:pointer}
+.end{text-align:center}
+.end h2{margin:6px 0;font-size:1.6rem}
+.end .big{font-size:3rem;font-weight:800;font-variant-numeric:tabular-nums}
+.pic{width:190px;max-width:60%;margin:0 auto 6px;background:#fff;border:3px solid var(--gold);border-radius:18px;padding:6px}
+.pic svg{width:100%;height:auto;display:block}
+.chk{display:flex;gap:8px;justify-content:center;align-items:center;font-weight:800;margin:10px 0 4px}
+.fb{min-height:1.6em;margin:16px 0 0}
+.expl{margin-top:8px;font-weight:600;background:#fff;border-radius:14px;padding:10px 12px;border:2px solid var(--gold)}
+.expl .ar{font-size:1.6rem}
+.mini{border:0;border-radius:50%;width:34px;height:34px;background:var(--green);color:var(--gold);cursor:pointer;margin-inline-start:6px}
+.rev{list-style:none;padding:0;margin:0 0 6px;text-align:start;display:grid;gap:6px}
+.rev .ar{font-size:1.4rem}
+.emo{font-size:4.2rem;text-align:center;line-height:1.1;margin:0 0 6px}
+.bank,.ans{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;direction:rtl;min-height:62px;padding:10px;border-radius:16px}
+.ans{background:#fff;border:3px dashed var(--green);margin-bottom:12px}
+.tok{font-family:var(--ar);font-weight:700;font-size:1.6rem;border:3px solid var(--green);background:var(--gold);color:var(--ink);border-radius:14px;padding:6px 14px;cursor:pointer}
+.tok:disabled{opacity:.35}
+.mt{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mt button{border:3px solid var(--green);background:var(--gold);color:var(--ink);border-radius:14px;padding:12px 8px;min-height:64px;cursor:pointer;font:800 1rem var(--ui)}
+.mt button.ar{font:700 1.5rem var(--ar)}
+.mt .sel{outline:4px solid var(--green)}
+.mt .done{background:var(--ok);color:#fff;border-color:var(--ok);cursor:default}
+.mt .bad{background:#f4b8b8;border-color:var(--no)}
+.note{font-size:.85rem;opacity:.8;text-align:center;margin-top:16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.back{color:var(--gold);font-weight:800;text-decoration:none;font-size:.9rem;border:2px solid var(--gold);border-radius:99px;padding:4px 12px}
+</style>
+</head>
+<body>
+<main>
+  <header><a href="index.html#quizzes" class="back">← Menu · القائمة</a><h1>تدريب · Latihan</h1><div class="score" id="score">0 / 0</div></header>
+  <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+  <section class="card" id="card" aria-live="polite"></section>
+  <p class="note">Tombol 🔊 membaca kalimat memakai suara perangkat; jika tidak ada suara Arab, tombol tidak berbunyi.</p>
+</main>
+<script>
+var T={mean:"Pilih arti · اختر المعنى",tr:"Pilih bentuk Arab · اختر العبارة",dl:"Jawab dialog · رد الحوار",fill:"Lengkapi kalimat · أكمل",listen:"Dengarkan · استمع",order:"Susun kalimat · رتب الكلمات",match:"Pasangkan · طابق",sit:"Situasi · الموقف"};
+function mc(n,kind,o){o.n=n;o.kind=kind;o.type='mc';return o}
+var DATA=[{"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "يَتَمَيَّزُ الْمَطْبَخُ الْعَرَبِيُّ بِتَنَوُّعِ نَكْهَاتِهِ.", "hint": "Apa artinya?", "opts": ["Masakan Arab dikenal dengan ragam cita rasanya.", "Meja itu penuh dengan hidangan lezat.", "Alangkah indahnya makan bersama!"], "arOpts": false, "full": "يَتَمَيَّزُ الْمَطْبَخُ الْعَرَبِيُّ بِتَنَوُّعِ نَكْهَاتِهِ.", "id": "Masakan Arab dikenal dengan ragam cita rasanya.", "n": 1}, {"type": "mc", "kind": "Dengarkan · استمع", "ar": "", "listen": "تُسْتَخْدَمُ الْبَهَارَاتُ بِكَثْرَةٍ فِي أَطْبَاقِنَا.", "emo": "🎧", "hint": "Tekan 🔊 lalu pilih yang kamu dengar.", "opts": ["تُسْتَخْدَمُ الْبَهَارَاتُ بِكَثْرَةٍ فِي أَطْبَاقِنَا.", "دَعَوْتُ جِيرَانِي إِلَى مَأْدُبَةٍ بِمُنَاسَبَةِ الْعِيدِ.", "الضِّيَافَةُ جُزْءٌ مِنْ ثَقَافَةِ الطَّعَامِ عِنْدَنَا."], "arOpts": true, "full": "تُسْتَخْدَمُ الْبَهَارَاتُ بِكَثْرَةٍ فِي أَطْبَاقِنَا.", "id": "Rempah banyak dipakai dalam hidangan kita.", "n": 2}, {"type": "mc", "kind": "Pilih bentuk Arab · اختر العبارة", "ar": "", "hint": "Nasi adalah unsur utama di meja makan kita.", "opts": ["الْأُرْزُ هُوَ الْعُنْصُرُ الْأَسَاسِيُّ فِي مَائِدَتِنَا.", "الضِّيَافَةُ جُزْءٌ مِنْ ثَقَافَةِ الطَّعَامِ عِنْدَنَا.", "الْمُكَوِّنَاتُ بَسِيطَةٌ لَكِنَّ السِّرَّ فِي التَّحْضِيرِ."], "arOpts": true, "full": "الْأُرْزُ هُوَ الْعُنْصُرُ الْأَسَاسِيُّ فِي مَائِدَتِنَا.", "id": "Nasi adalah unsur utama di meja makan kita.", "n": 3}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "يَجْتَمِعُ أَفْرَادُ الْأُسْرَةِ حَوْلَ الْمَائِدَةِ فِي الْإِفْطَارِ.", "hint": "Apa artinya?", "opts": ["Anggota keluarga berkumpul di meja saat berbuka.", "Nasi adalah unsur utama di meja makan kita.", "Saya berusaha menganekaragamkan makanan agar mendapat manfaat yang berbeda."], "arOpts": false, "full": "يَجْتَمِعُ أَفْرَادُ الْأُسْرَةِ حَوْلَ الْمَائِدَةِ فِي الْإِفْطَارِ.", "id": "Anggota keluarga berkumpul di meja saat berbuka.", "n": 4}, {"type": "order", "kind": "Susun kalimat · رتب الكلمات", "hint": "Saya suka mencoba makanan tradisional di pasar.", "words": ["أُحِبُّ", "تَجْرِبَةَ", "الْأَطْعِمَةِ", "الشَّعْبِيَّةِ", "فِي", "الْأَسْوَاقِ."], "full": "أُحِبُّ تَجْرِبَةَ الْأَطْعِمَةِ الشَّعْبِيَّةِ فِي الْأَسْوَاقِ.", "id": "Saya suka mencoba makanan tradisional di pasar.", "n": 5}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "تَعَلَّمْتُ هَذِهِ الْوَصْفَةَ مِنْ جَدَّتِي.", "hint": "Apa artinya?", "opts": ["Saya belajar resep ini dari nenek saya.", "Anggota keluarga berkumpul di meja saat berbuka.", "Saya berusaha menganekaragamkan makanan agar mendapat manfaat yang berbeda."], "arOpts": false, "full": "تَعَلَّمْتُ هَذِهِ الْوَصْفَةَ مِنْ جَدَّتِي.", "id": "Saya belajar resep ini dari nenek saya.", "n": 6}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "الْمُكَوِّنَاتُ بَسِيطَةٌ لَكِنَّ السِّرَّ فِي التَّحْضِيرِ.", "hint": "Apa artinya?", "opts": ["Bahannya sederhana tapi rahasianya ada pada cara membuatnya.", "Kami menyantap makanan manis dengan teh setelah makan malam.", "Saya belajar resep ini dari nenek saya."], "arOpts": false, "full": "الْمُكَوِّنَاتُ بَسِيطَةٌ لَكِنَّ السِّرَّ فِي التَّحْضِيرِ.", "id": "Bahannya sederhana tapi rahasianya ada pada cara membuatnya.", "n": 7}, {"type": "mc", "kind": "Pilih bentuk Arab · اختر العبارة", "ar": "", "hint": "Daging harus dimasak dengan api kecil.", "opts": ["يَجِبُ أَنْ يُطْهَى اللَّحْمُ عَلَى نَارٍ هَادِئَةٍ.", "يَجْتَمِعُ أَفْرَادُ الْأُسْرَةِ حَوْلَ الْمَائِدَةِ فِي الْإِفْطَارِ.", "أَحْرِصُ عَلَى تَنْوِيعِ طَعَامِي لِأَحْصُلَ عَلَى فَوَائِدَ مُخْتَلِفَةٍ."], "arOpts": true, "full": "يَجِبُ أَنْ يُطْهَى اللَّحْمُ عَلَى نَارٍ هَادِئَةٍ.", "id": "Daging harus dimasak dengan api kecil.", "n": 8}, {"type": "mc", "kind": "Dengarkan · استمع", "ar": "", "listen": "لَا أَتَنَاوَلُ الْوَجَبَاتِ السَّرِيعَةَ إِلَّا نَادِرًا.", "emo": "🎧", "hint": "Tekan 🔊 lalu pilih yang kamu dengar.", "opts": ["لَا أَتَنَاوَلُ الْوَجَبَاتِ السَّرِيعَةَ إِلَّا نَادِرًا.", "كَانَتِ الْمَائِدَةُ عَامِرَةً بِمَا لَذَّ وَطَابَ.", "أُحِبُّ تَجْرِبَةَ الْأَطْعِمَةِ الشَّعْبِيَّةِ فِي الْأَسْوَاقِ."], "arOpts": true, "full": "لَا أَتَنَاوَلُ الْوَجَبَاتِ السَّرِيعَةَ إِلَّا نَادِرًا.", "id": "Saya jarang makan makanan cepat saji.", "n": 9}, {"type": "match", "kind": "Pasangkan · طابق", "hint": "Pasangkan kalimat dengan artinya.", "pairs": [["أَحْرِصُ عَلَى تَنْوِيعِ طَعَامِي لِأَحْصُلَ عَلَى فَوَائِدَ مُخْتَلِفَةٍ.", "Saya berusaha menganekaragamkan makanan agar mendapat manfaat yang berbeda."], ["الْمُكَوِّنَاتُ بَسِيطَةٌ لَكِنَّ السِّرَّ فِي التَّحْضِيرِ.", "Bahannya sederhana tapi rahasianya ada pada cara membuatnya."], ["الْأُرْزُ هُوَ الْعُنْصُرُ الْأَسَاسِيُّ فِي مَائِدَتِنَا.", "Nasi adalah unsur utama di meja makan kita."], ["تَعَلَّمْتُ هَذِهِ الْوَصْفَةَ مِنْ جَدَّتِي.", "Saya belajar resep ini dari nenek saya."]], "full": "أَحْرِصُ عَلَى تَنْوِيعِ طَعَامِي لِأَحْصُلَ عَلَى فَوَائِدَ مُخْتَلِفَةٍ. — الْمُكَوِّنَاتُ بَسِيطَةٌ لَكِنَّ السِّرَّ فِي التَّحْضِيرِ. — الْأُرْزُ هُوَ الْعُنْصُرُ الْأَسَاسِيُّ فِي مَائِدَتِنَا. — تَعَلَّمْتُ هَذِهِ الْوَصْفَةَ مِنْ جَدَّتِي.", "id": "Saya berusaha menganekaragamkan makanan agar mendapat manfaat yang berbeda. / Bahannya sederhana tapi rahasianya ada pada cara membuatnya. / Nasi adalah unsur utama di meja makan kita. / Saya belajar resep ini dari nenek saya.", "n": 10}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "الضِّيَافَةُ جُزْءٌ مِنْ ثَقَافَةِ الطَّعَامِ عِنْدَنَا.", "hint": "Apa artinya?", "opts": ["Menjamu tamu adalah bagian dari budaya makan kita.", "Saya mengurangi gula tapi tidak melarang diri sepenuhnya.", "Anggota keluarga berkumpul di meja saat berbuka."], "arOpts": false, "full": "الضِّيَافَةُ جُزْءٌ مِنْ ثَقَافَةِ الطَّعَامِ عِنْدَنَا.", "id": "Menjamu tamu adalah bagian dari budaya makan kita.", "n": 11}, {"type": "mc", "kind": "Dengarkan · استمع", "ar": "", "listen": "دَعَوْتُ جِيرَانِي إِلَى مَأْدُبَةٍ بِمُنَاسَبَةِ الْعِيدِ.", "emo": "🎧", "hint": "Tekan 🔊 lalu pilih yang kamu dengar.", "opts": ["دَعَوْتُ جِيرَانِي إِلَى مَأْدُبَةٍ بِمُنَاسَبَةِ الْعِيدِ.", "أَحْرِصُ عَلَى تَنْوِيعِ طَعَامِي لِأَحْصُلَ عَلَى فَوَائِدَ مُخْتَلِفَةٍ.", "يَجِبُ أَنْ يُطْهَى اللَّحْمُ عَلَى نَارٍ هَادِئَةٍ."], "arOpts": true, "full": "دَعَوْتُ جِيرَانِي إِلَى مَأْدُبَةٍ بِمُنَاسَبَةِ الْعِيدِ.", "id": "Saya mengundang tetangga ke jamuan menyambut hari raya.", "n": 12}, {"type": "mc", "kind": "Pilih bentuk Arab · اختر العبارة", "ar": "", "hint": "Meja itu penuh dengan hidangan lezat.", "opts": ["كَانَتِ الْمَائِدَةُ عَامِرَةً بِمَا لَذَّ وَطَابَ.", "أُحِبُّ تَجْرِبَةَ الْأَطْعِمَةِ الشَّعْبِيَّةِ فِي الْأَسْوَاقِ.", "تُسْتَخْدَمُ الْبَهَارَاتُ بِكَثْرَةٍ فِي أَطْبَاقِنَا."], "arOpts": true, "full": "كَانَتِ الْمَائِدَةُ عَامِرَةً بِمَا لَذَّ وَطَابَ.", "id": "Meja itu penuh dengan hidangan lezat.", "n": 13}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "مَا أَرْوَعَ أَنْ نَأْكُلَ مَعًا!", "hint": "Apa artinya?", "opts": ["Alangkah indahnya makan bersama!", "Meja itu penuh dengan hidangan lezat.", "Saya suka mencoba makanan tradisional di pasar."], "arOpts": false, "full": "مَا أَرْوَعَ أَنْ نَأْكُلَ مَعًا!", "id": "Alangkah indahnya makan bersama!", "n": 14}, {"type": "order", "kind": "Susun kalimat · رتب الكلمات", "hint": "Kami menyantap makanan manis dengan teh setelah makan malam.", "words": ["تَنَاوَلْنَا", "الْحَلْوَى", "مَعَ", "الشَّايِ", "بَعْدَ", "الْعَشَاءِ."], "full": "تَنَاوَلْنَا الْحَلْوَى مَعَ الشَّايِ بَعْدَ الْعَشَاءِ.", "id": "Kami menyantap makanan manis dengan teh setelah makan malam.", "n": 15}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "أَنَا أُقَلِّلُ مِنَ السُّكَّرِ لَكِنَّنِي لَا أَحْرِمُ نَفْسِي كُلِّيًّا.", "hint": "Apa artinya?", "opts": ["Saya mengurangi gula tapi tidak melarang diri sepenuhnya.", "Anggota keluarga berkumpul di meja saat berbuka.", "Rempah banyak dipakai dalam hidangan kita."], "arOpts": false, "full": "أَنَا أُقَلِّلُ مِنَ السُّكَّرِ لَكِنَّنِي لَا أَحْرِمُ نَفْسِي كُلِّيًّا.", "id": "Saya mengurangi gula tapi tidak melarang diri sepenuhnya.", "n": 16}];
+var card=document.getElementById('card'),shuffleQ=true,list,i,score,answered,wrong;
+function shuffle(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var t=a[k];a[k]=a[j];a[j]=t}return a}
+function speak(t){try{if(!window.speechSynthesis||!t)return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
+function setBar(v){document.getElementById('bar').style.width=(v/list.length*100)+'%'}
+function home(){
+  list=DATA;i=0;score=0;
+  document.getElementById('score').textContent='';document.getElementById('bar').style.width='0';
+  card.innerHTML='<div class="end"><p class="kind">Selamat datang · أهلًا بك</p><h2>Latihan: Makanan dan Budaya Kuliner</h2><p class="hint" style="margin-bottom:6px">الطعام والثقافة الغذائية · 16 soal dengan beragam tipe: pilihan, dengar, susun kata, dan pasangkan.</p><label class="chk"><input type="checkbox" id="rnd" checked> Acak urutan soal</label><button class="next" id="go" style="display:block">Mulai · ابدأ</button></div>';
+  document.getElementById('go').onclick=function(){shuffleQ=document.getElementById('rnd').checked;begin(DATA)};
+}
+function begin(items){list=shuffleQ?shuffle(items):items.slice();i=0;score=0;wrong=[];show()}
+function head(q){return '<p class="kind">'+q.kind+' · '+(i+1)+'/'+list.length+'</p>'}
+function show(){
+  answered=false;var q=list[i];
+  setBar(i);document.getElementById('score').textContent=score+' / '+i;
+  if(q.type==='order')return showOrder(q);
+  if(q.type==='match')return showMatch(q);
+  var idx=shuffle(q.opts.map(function(_,k){return k}));
+  var h=head(q);
+  if(q.emo)h+='<div class="emo" aria-hidden="true">'+q.emo+'</div>';
+  if(q.ar||q.listen)h+='<div class="q"><button class="snd" id="snd" aria-label="Putar suara">🔊</button>'+(q.ar?'<span class="ar">'+q.ar+'</span>':'')+'</div>';
+  h+='<p class="hint">'+q.hint+'</p><div class="opts">';
+  idx.forEach(function(k){h+='<button class="opt'+(q.arOpts?'':' lat')+'" data-k="'+k+'"><span class="'+(q.arOpts?'ar':'')+'">'+q.opts[k]+'</span><span class="badge" aria-hidden="true"></span></button>'});
+  h+='</div><div class="fb" id="fb"></div><button class="next" id="next">Lanjut ←</button>';
+  card.innerHTML=h;
+  var sb=document.getElementById('snd');if(sb)sb.onclick=function(){speak(q.listen||q.ar)};
+  Array.prototype.forEach.call(card.querySelectorAll('.opt'),function(b){b.onclick=function(){pick(b,q)}});
+  document.getElementById('next').onclick=advance;
+}
+function advance(){i++;i<list.length?show():finish()}
+function result(q,right){
+  if(right)score++;else wrong.push(q);
+  var fb=document.getElementById('fb');
+  fb.innerHTML='<div style="color:'+(right?'#1f7a3c':'#b02a2a')+'">'+(right?'Benar! أحسنت':'Belum tepat.')+'</div><div class="expl"><span class="ar">'+q.full+'</span><br>'+q.id+' <button class="mini" id="snd2" aria-label="Putar suara">🔊</button></div>';
+  document.getElementById('snd2').onclick=function(){speak(q.full.split(' — ')[0])};
+  document.getElementById('score').textContent=score+' / '+(i+1);setBar(i+1);
+  var n=document.getElementById('next');n.style.display='block';n.textContent=(i+1<list.length)?'Lanjut ←':'Lihat hasil';n.focus();
+}
+function pick(b,q){
+  if(answered)return;answered=true;
+  var k=+b.getAttribute('data-k'),right=(k===q.ans||(q.ans===undefined&&k===0));
+  Array.prototype.forEach.call(card.querySelectorAll('.opt'),function(o){o.disabled=true;if(+o.getAttribute('data-k')===0&&!right)o.classList.add('reveal')});
+  b.classList.add(right?'ok':'no');b.querySelector('.badge').textContent=right?'✓':'✕';
+  result(q,right);
+}
+function showOrder(q){
+  var bank=shuffle(q.words.map(function(w,k){return {w:w,k:k}})),chosen=[];
+  var h=head(q)+'<div class="q"><button class="snd" id="snd" aria-label="Putar suara">🔊</button></div><p class="hint">'+q.hint+'</p><div class="ans" id="ans" aria-label="Jawabanmu"></div><div class="bank" id="bank"></div><div class="fb" id="fb"></div><button class="next" id="chk" style="display:block">Periksa · تحقق</button><button class="next" id="next">Lanjut ←</button>';
+  card.innerHTML=h;
+  document.getElementById('snd').onclick=function(){speak(q.full)};
+  function draw(){
+    var a=document.getElementById('ans'),b=document.getElementById('bank');a.innerHTML='';b.innerHTML='';
+    chosen.forEach(function(t,p){var e=document.createElement('button');e.className='tok';e.textContent=t.w;e.onclick=function(){if(answered)return;chosen.splice(p,1);bank.push(t);draw()};a.appendChild(e)});
+    bank.forEach(function(t,p){var e=document.createElement('button');e.className='tok';e.textContent=t.w;e.disabled=answered;e.onclick=function(){bank.splice(p,1);chosen.push(t);draw()};b.appendChild(e)});
+  }
+  draw();
+  document.getElementById('next').onclick=advance;
+  document.getElementById('chk').onclick=function(){
+    if(answered||chosen.length!==q.words.length)return;answered=true;
+    var right=chosen.every(function(t,p){return t.k===p});
+    document.getElementById('ans').style.borderColor=right?'#2e9e4f':'#d63a3a';
+    document.getElementById('chk').style.display='none';draw();result(q,right);
+  };
+}
+function showMatch(q){
+  var L=shuffle(q.pairs.map(function(p,k){return {t:p[0],k:k}})),R=shuffle(q.pairs.map(function(p,k){return {t:p[1],k:k}})),sel=null,left=q.pairs.length,mist=0;
+  var h=head(q)+'<p class="hint">'+q.hint+'</p><div class="mt"><div style="display:grid;gap:10px" id="cl"></div><div style="display:grid;gap:10px" id="cr"></div></div><div class="fb" id="fb"></div><button class="next" id="next">Lanjut ←</button>';
+  card.innerHTML=h;
+  document.getElementById('next').onclick=advance;
+  function mk(col,arr,isAr){arr.forEach(function(x){var b=document.createElement('button');b.textContent=x.t;if(isAr)b.className='ar';b.onclick=function(){
+      if(b.classList.contains('done'))return;
+      if(isAr){speak(x.t);Array.prototype.forEach.call(document.querySelectorAll('#cl button'),function(e){e.classList.remove('sel')});b.classList.add('sel');sel={k:x.k,b:b};return}
+      if(!sel)return;
+      if(sel.k===x.k){sel.b.classList.remove('sel');sel.b.classList.add('done');b.classList.add('done');sel=null;left--;
+        if(!left){answered=true;result(q,mist===0)}}
+      else{mist++;b.classList.add('bad');setTimeout(function(){b.classList.remove('bad')},500)}
+    };col.appendChild(b)})}
+  mk(document.getElementById('cl'),L,true);mk(document.getElementById('cr'),R,false);
+}
+function finish(){
+  var pct=Math.round(score/list.length*100);
+  var h='<div class="end"><p class="kind">Hasil · النتيجة</p><div class="big">'+score+' / '+list.length+'</div><h2>'+(pct>=80?'Mumtaz! ممتاز':pct>=50?'Bagus, terus berlatih':'Ayo coba lagi')+'</h2>';
+  if(wrong.length){h+='<p class="hint" style="margin:10px 0 6px">Perlu diulang:</p><ul class="rev">';wrong.forEach(function(q){h+='<li><span class="ar">'+q.full+'</span> — '+q.id+'</li>'});h+='</ul><button class="next" id="redo" style="display:block">Ulangi yang salah · أعد الأخطاء</button>'}
+  h+='<button class="next" id="again" style="display:block">Mulai dari awal · من البداية</button></div>';
+  card.innerHTML=h;var r=document.getElementById('redo');if(r)r.onclick=function(){begin(wrong.slice())};
+  document.getElementById('again').onclick=home;document.getElementById('bar').style.width='100%';
+}
+var AUDIO={"يَتَمَيَّزُ الْمَطْبَخُ الْعَرَبِيُّ بِتَنَوُّعِ نَكْهَاتِهِ.": "1929", "": "1929a", "تُسْتَخْدَمُ الْبَهَارَاتُ بِكَثْرَةٍ فِي أَطْبَاقِنَا.": "1930", "الْأُرْزُ هُوَ الْعُنْصُرُ الْأَسَاسِيُّ فِي مَائِدَتِنَا.": "1931", "يَجْتَمِعُ أَفْرَادُ الْأُسْرَةِ حَوْلَ الْمَائِدَةِ فِي الْإِفْطَارِ.": "1932", "أُحِبُّ تَجْرِبَةَ الْأَطْعِمَةِ الشَّعْبِيَّةِ فِي الْأَسْوَاقِ.": "1933", "تَعَلَّمْتُ هَذِهِ الْوَصْفَةَ مِنْ جَدَّتِي.": "1934", "الْمُكَوِّنَاتُ بَسِيطَةٌ لَكِنَّ السِّرَّ فِي التَّحْضِيرِ.": "1935", "يَجِبُ أَنْ يُطْهَى اللَّحْمُ عَلَى نَارٍ هَادِئَةٍ.": "1936", "لَا أَتَنَاوَلُ الْوَجَبَاتِ السَّرِيعَةَ إِلَّا نَادِرًا.": "1937", "أَحْرِصُ عَلَى تَنْوِيعِ طَعَامِي لِأَحْصُلَ عَلَى فَوَائِدَ مُخْتَلِفَةٍ.": "1938", "الضِّيَافَةُ جُزْءٌ مِنْ ثَقَافَةِ الطَّعَامِ عِنْدَنَا.": "1939", "دَعَوْتُ جِيرَانِي إِلَى مَأْدُبَةٍ بِمُنَاسَبَةِ الْعِيدِ.": "1940", "كَانَتِ الْمَائِدَةُ عَامِرَةً بِمَا لَذَّ وَطَابَ.": "1941", "مَا أَرْوَعَ أَنْ نَأْكُلَ مَعًا!": "1942", "تَنَاوَلْنَا الْحَلْوَى مَعَ الشَّايِ بَعْدَ الْعَشَاءِ.": "1943", "أَنَا أُقَلِّلُ مِنَ السُّكَّرِ لَكِنَّنِي لَا أَحْرِمُ نَفْسِي كُلِّيًّا.": "1944"},curA=null;
+function speak(t){try{if(curA){curA.pause();curA=null}if(window.speechSynthesis)speechSynthesis.cancel();if(!t)return;
+ function tts(){try{if(!window.speechSynthesis)return;var u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
+ var k=AUDIO[t];if(!k){tts();return}
+ var a=new Audio('audio/'+k+'.mp3');curA=a;a.playbackRate=.95;a.onerror=tts;var p=a.play();if(p&&p.catch)p.catch(tts)}catch(e){}}
+home();
+</script>
+</body>
+</html>
